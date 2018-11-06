@@ -93,11 +93,16 @@
   _.filter = function(collection, test) {
     var filtered = [];
     
-    for (var i = 0; i < collection.length; i++) {
-      if (test(collection[i])) {
-        filtered.push(collection[i]);
-      }     
-    }
+    // for (var i = 0; i < collection.length; i++) {
+    //   if (test(collection[i])) {
+    //     filtered.push(collection[i]);
+    //   }     
+    // }
+    _.each(collection, function(element, index, collection) {
+      if(test(element, index)) {
+        filtered.push(element);
+      }
+    })
     return filtered;
 
   };
@@ -113,32 +118,34 @@
 
   // Produce a duplicate-free version of the array.
   _.uniq = function(array, isSorted, iterator) {
-    var arr = [];
+    
     if (isSorted) {
+      var arr = [];
       if (iterator) {
-        
-      }
-      else {
+        arr.push(array[0]);
         for (var i = 1; i < array.length; i++) {
-          if (array[i] !== array[i-1]) {
+          if (iterator(array[i]) !== iterator(array[i - 1])) {
             arr.push(array[i]);
           }
         }
       }
+      else {
+        arr.push(array[0]);
+        for (var i = 1; i < array.length; i++) {
+          if (array[i] !== array[i - 1]) {
+            arr.push(array[i]);
+          }
+        }
+      }
+      return arr;
     }
     else {
-      if (iterator) {
-        
-      }
-      else {
-        _.each(array, function(val, index) {
-          if (indexOf(val) === index) {
-            arr.push(val);
-          }
-        });
-      }
+      return _.filter(array, function(element, index) {
+        console.log(element, index);
+        return _.indexOf(array, element) === index;
+      });
     }
-    return arr;
+    
   };
 
 
