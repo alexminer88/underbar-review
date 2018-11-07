@@ -372,6 +372,21 @@
   // already computed the result for the given argument and return that value
   // instead if possible.
   _.memoize = function(func) {
+  	// initialize an object to store expensive function's results
+  	var cache = {};
+  	// return function, when called, checks if cache already has computed value for given argument and return that value instead if possible
+  	return function () {
+  		// store given argument as a stringified version of the arguments that are given to the function func
+  		var str = JSON.stringify(arguments);
+  		// check if cache already has computed value for a given argument
+  		if (!cache[str]) {
+  			// if cache does not have computed value, add the computed value to the cache at the key str, which is a stringified version of the arguments
+  			cache[str] = func.apply(this, arguments);
+  		}
+  		// return value of result at arguments
+  		return cache[str];
+
+  	};
   };
 
   // Delays a function for the given number of milliseconds, and then calls
