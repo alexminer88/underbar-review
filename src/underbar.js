@@ -200,15 +200,13 @@
   //   }); // should be 5, regardless of the iterator function passed in
   //          No accumulator is given so the first element is used.
   _.reduce = function(collection, iterator, accumulator) {
-    if (Array.isArray(collection)) {
-      if (arguments.length === 2) {
+    if (Array.isArray(collection) && arguments.length === 2) {
         accumulator = collection[0];
         collection = collection.slice(1);
-      }
-      _.each(collection, function(element, index, collection) {
+    } 
+    _.each(collection, function(element, index, collection) {
           accumulator = iterator(accumulator, element, index, collection);
       });
-    }
     return accumulator;
   };
 
@@ -227,13 +225,59 @@
 
   // Determine whether all of the elements match a truth test.
   _.every = function(collection, iterator) {
+    /*
+    if empty, return true
+    
+    iterate
+      check current for truthiness
+        if false, 
+    */
     // TIP: Try re-using reduce() here.
+    // var match = true;
+    
+    // if (!collection.length) {
+    //   return true;
+    // };
+    
+    // if (arguments.length === 2) {
+    //   for (var i = 0; i < collection.length; i++) {
+    //     match = match && Boolean(iterator(collection[i]));
+    //   }
+    // } else if (arguments.length === 1) {
+    //   for (var i = 0; i < collection.length; i++) {
+    //     match = match && Boolean(collection[i]);
+    //   }
+    // }
+    // return match;
+    
+    return _.reduce(collection, function(accum, el) {
+      if (iterator) {
+        if (iterator(el)) {
+          return accum && true;
+        } else if (!iterator(el)) {
+          return accum && false;
+        }
+      } else {
+        return el;
+      }
+    }, true);  
   };
 
   // Determine whether any of the elements pass a truth test. If no iterator is
   // provided, provide a default one
   _.some = function(collection, iterator) {
     // TIP: There's a very clever way to re-use every() here.
+    return _.reduce(collection, function(accum, el) {
+      if (iterator) {
+        if (iterator(el)) {
+          return accum || true;
+        } else if (!iterator(el)) {
+          return accum || false;
+        }
+      } else {
+        return el;
+      }
+    }, true);
   };
 
 
